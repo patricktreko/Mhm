@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Period Tracker Puzzle</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        .tracker-container {
+            max-width: 600px;
+            margin: 2em auto;
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 2px 12px #ffd6e0;
+            padding: 2em;
+            text-align: center;
+        }
+        #howToPlay {
+            background: #fff8fb;
+            border: 2px solid #ffd6e0;
+            border-radius: 14px;
+            padding: 1em 1.5em;
+            margin-bottom: 1.5em;
+            font-size: 1.1em;
+            color: #a61b46;
+        }
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 40px);
+            grid-template-rows: repeat(4, 40px);
+            gap: 8px;
+            justify-content: center;
+            margin: 1.5em auto;
+        }
+        .calendar-cell {
+            width: 40px;
+            height: 40px;
+            background: #ffe0ec;
+            border: 2px solid #d72660;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3em;
+            cursor: grab;
+            user-select: none;
+            transition: background 0.2s, border 0.2s, transform 0.15s;
+            position: relative;
+        }
+        .calendar-cell.selected {
+            background: #d72660;
+            color: #fff;
+            border: 2px solid #a61b46;
+            z-index: 2;
+        }
+        .calendar-cell.correct {
+            background: #a2e6a2 !important;
+            border-color: #3bb143 !important;
+            color: #222 !important;
+        }
+        .calendar-cell.wrong {
+            background: #ffd6e0 !important;
+            border-color: #d72660 !important;
+            color: #d72660 !important;
+        }
+        .calendar-cell.drag-over {
+            outline: 2px dashed #1e90ff;
+            outline-offset: -4px;
+            background: #ffe0ec;
+        }
+        #tracker-feedback {
+            margin-top: 1em;
+            font-size: 1.1em;
+            font-weight: bold;
+        }
+        .legend {
+            margin: 1em auto 0.5em auto;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5em;
+            justify-content: center;
+            font-size: 1em;
+        }
+        .legend span {
+            display: flex;
+            align-items: center;
+            gap: 0.3em;
+        }
+    </style>
+</head>
+<body>
+    <div class="tracker-container">
+        <h1>🩸 Period Tracker Puzzle</h1>
+        <div id="howToPlay">
+            <strong>How to Play:</strong><br>
+            Rearrange the icons on the 28-day calendar to match a typical menstrual cycle.<br>
+            <b>Drag and drop</b> icons to swap their places, or tap two icons to swap them. Try to get the correct sequence!
+        </div>
+        <div class="legend">
+            <span>🌸 Ovulation</span>
+            <span>💧 Spotting</span>
+            <span>🩸 Heavy Flow</span>
+            <span>😣 Cramps</span>
+            <span>😶 Mood Swings</span>
+        </div>
+        <div class="calendar-grid" id="calendarGrid"></div>
+        <div id="tracker-feedback"></div>
+        <button onclick="resetPuzzle()" style="margin-top:1em; background:#d72660; color:#fff; border:none; border-radius:10px; padding:0.5em 1.2em; font-size:1em; cursor:pointer;">Reset</button>
+        <a href="/" style="display:block; margin-top:2em;">Back to Home</a>
+    </div>
+    <script>
+        // The correct sequence for a typical 28-day cycle
+        const correctSequence = [
+            "😣", "😣", "🩸", "🩸", "🩸", "🩸", "🩸", // Days 1-7: cramps & heavy flow
+            "💧", "💧", "😶", "😶", "😶", "😶", "😶", // Days 8-14: spotting & mood swings
+            "🌸", "😶", "😶", "😶", "😶", "😶",      // Day 15: ovulation, mood swings
+            "💧", "💧", "😶", "😶", "😶", "😶", "😶", // Days 16-21: spotting & mood swings
+            "😶", "😶", "😶", "😶", "😶", "😶", "😶"  // Days 22-28: mood swings
+        ].slice(0, 28);
+
+        // Shuffle function
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        let puzzle = [...correctSequence];
+        shuffle(puzzle);
+
+        const calendarGrid = document.getElementById('calendarGrid');
+        let selectedIdx = null;
+        let dragFromIdx = null;
+
+        // Detect touch device
+        const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+
+        function renderGrid() {
+            calendarGrid.innerHTML = "";
+            for (let i = 0; i < 28; i++) {
+                const cell = document.createElement('div');
+                cell.className = 'calendar-cell';
+                cell.textContent = puzzle[i];
+                cell.dataset.idx = i;
+                if (selectedIdx === i) cell.classList.add('selected');
+
+                // Only enable drag on desktop
+                if (!isTouch) {
+                    cell.setAttribute('draggable', 'true');
+                    cell.addEventListener('dragstart', function(e) {
+                        dragFromIdx = i;
+                        cell.classList.add('selected');
+                        setTimeout(() => cell.classList.add('dragging'), 0);
+                    });
+                    cell.addEventListener('dragend', function(e) {
+                        dragFromIdx = null;
+                        cell.classList.remove('selected', 'dragging');
+                        document.querySelectorAll('.calendar-cell').forEach(c => c.classList.remove('drag-over'));
+                    });
+                    cell.addEventListener('dragover', function(e) {
+                        e.preventDefault();
+                        if (dragFromIdx !== null && dragFromIdx !== i) {
+                            cell.classList.add('drag-over');
+                        }
+                    });
+                    cell.addEventListener('dragleave', function(e) {
+                        cell.classList.remove('drag-over');
+                    });
+                    cell.addEventListener('drop', function(e) {
+                        e.preventDefault();
+                        if (dragFromIdx !== null && dragFromIdx !== i) {
+                            swapCells(dragFromIdx, i);
+                            dragFromIdx = null;
+                            renderGrid();
+                            checkPuzzle();
+                        }
+                    });
+                }
+
+                // Tap to select/swap (always enabled)
+                cell.onclick = function() {
+                    handleCellClick(i);
+                };
+
+                calendarGrid.appendChild(cell);
+            }
+        }
+
+        function handleCellClick(idx) {
+            if (selectedIdx === null) {
+                selectedIdx = idx;
+                renderGrid();
+            } else if (selectedIdx === idx) {
+                selectedIdx = null;
+                renderGrid();
+            } else {
+                swapCells(selectedIdx, idx);
+                selectedIdx = null;
+                renderGrid();
+                checkPuzzle();
+            }
+        }
+
+        function swapCells(idx1, idx2) {
+            [puzzle[idx1], puzzle[idx2]] = [puzzle[idx2], puzzle[idx1]];
+        }
+
+        function checkPuzzle() {
+            let correct = 0;
+            for (let i = 0; i < 28; i++) {
+                if (puzzle[i] === correctSequence[i]) correct++;
+            }
+            if (correct === 28) {
+                document.getElementById('tracker-feedback').textContent = "🎉 You arranged a healthy cycle! Great job!";
+                document.querySelectorAll('.calendar-cell').forEach(cell => cell.classList.add('correct'));
+            } else {
+                document.getElementById('tracker-feedback').textContent = `You have ${correct}/28 days correct. Keep going!`;
+            }
+        }
+
+        function resetPuzzle() {
+            puzzle = [...correctSequence];
+            shuffle(puzzle);
+            selectedIdx = null;
+            dragFromIdx = null;
+            document.getElementById('tracker-feedback').textContent = "";
+            renderGrid();
+        }
+
+        renderGrid();
+    </script>
+</body>
+</html>

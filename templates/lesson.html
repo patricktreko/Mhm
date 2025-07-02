@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ lesson.title }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
+    <meta name="theme-color" content="#d72660">
+</head>
+<body>
+    <div class="lesson-container" style="max-width: 600px; margin: 0 auto; padding: 2em 1em 1em 1em; position: relative;">
+        <button class="back-btn" onclick="if(document.referrer){window.history.back();}else{window.location.href='/';}" aria-label="Back">&#8592;</button>
+        <div class="lesson-header" style="text-align: center; margin-bottom: 1.5em;">
+            <h1 style="margin-bottom: 0.2em;">{{ lesson.title }}</h1>
+            <p style="color: #555; margin-top: 0;">{{ lesson.description }}</p>
+            <img src="{{ lesson.image }}" alt="{{ lesson.title }}" class="lesson-main-image">
+        </div>
+
+        <div class="lesson-content" style="margin: 1.5em 0;">
+            <p>{{ lesson.lesson }}</p>
+            {% if in_depth and in_depth.sections %}
+                <div class="in-depth-section" style="margin-top:2em;">
+                    <h2 style="color:#a61b46;">In-Depth Lesson</h2>
+                    {% for section in in_depth.sections %}
+                        <div class="in-depth-block" style="margin-bottom:1.5em;">
+                            <h3 style="margin-bottom:0.3em; color:#d72660;">{{ section.heading }}</h3>
+                            {% set lines = section.content.split('\n') %}
+                            {% set para = [] %}
+                            {% set items = [] %}
+                            {% for line in lines %}
+                                {% if line.strip().startswith('- ') or line.strip().startswith('1.') or line.strip().startswith('2.') or line.strip().startswith('3.') or line.strip().startswith('4.') or line.strip().startswith('5.') %}
+                                    {% set _ = items.append(line.strip().lstrip('- ').strip()) %}
+                                {% elif line.strip() %}
+                                    {% set _ = para.append(line.strip()) %}
+                                {% endif %}
+                            {% endfor %}
+                            {% if para %}
+                                <p style="color:#444;">{{ para|join(' ') }}</p>
+                            {% endif %}
+                            {% if items %}
+                                <ul style="color:#444; padding-left:1.2em;">
+                                    {% for item in items %}
+                                        <li>{{ item }}</li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <hr style="margin: 2em 0; border: none; border-top: 2px solid #ffd6e0;">
+
+        <div class="activities-section">
+            <h2 style="color: #d72660; text-align: center; margin-bottom: 1em;">Quiz & Activities</h2>
+            <div id="activities">
+                {% for activity in lesson.activities %}
+                    <div class="activity-card">
+                        <h3>{{ activity.question }}</h3>
+                        {% for option in activity.options %}
+                            <button onclick="checkAnswer(JSON.parse(this.getAttribute('data-option')), JSON.parse(this.getAttribute('data-answer')))"
+                                data-option='{{ option|tojson }}' data-answer='{{ activity.answer|tojson }}'>{{ option }}</button>
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        {% if lesson.title == "What is Menstruation?" %}
+        <div style="text-align:center; margin-top:2em;">
+            <a href="{{ url_for('minigame') }}" class="activity-card" style="display:inline-block; padding:1em 2em; background:#d72660; color:#fff; border-radius:8px; text-decoration:none; font-weight:bold;">
+                🎮 Try the Menstruation Mini-Game!
+            </a>
+        </div>
+        {% endif %}
+    </div>
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+    <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function() {
+        navigator.serviceWorker.register('/static/js/sw.js');
+      });
+    }
+    </script>
+</body>
+</html>

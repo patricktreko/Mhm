@@ -1,0 +1,190 @@
+[
+  {
+    "id": 1,
+    "title": "Puberty",
+    "image": "/static/img/puberty.jpg",
+    "description": "Learn about the physical changes that occur during puberty.",
+    "lesson": "Puberty is the process an individual goes through when their body begins to develop and change as they move from childhood to adulthood. Physical changes include growth spurts, development of reproductive organs, and body hair.",
+    "activities": [
+      {
+        "question": "What is puberty?",
+        "options": [
+          "An illness",
+          "The process of aging",
+          "Body changes during transition to adulthood",
+          "Just growing taller"
+        ],
+        "answer": "Body changes during transition to adulthood"
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "title": "Reproductive System",
+    "image": "/static/img/reproductive_system.jpg",
+    "description": "Understand the male and female reproductive organs.",
+    "lesson": "The reproductive system includes organs needed to produce offspring. Males have a penis, scrotum, testes, and vas deferens. Females have ovaries, fallopian tubes, uterus, cervix, and vagina.",
+    "activities": [
+      {
+        "question": "Which of the following is part of the female reproductive system?",
+        "options": [
+          "Penis",
+          "Ovaries",
+          "Scrotum",
+          "Vas Deferens"
+        ],
+        "answer": "Ovaries"
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "title": "Menstrual Cycle",
+    "image": "/static/img/menstrual_cycle.jpg",
+    "description": "Learn about the monthly cycle and what happens during menstruation.",
+    "lesson": "The menstrual cycle is a monthly process where the uterus prepares for a possible pregnancy. If no pregnancy occurs, the lining of the uterus sheds\u2014this is menstruation.",
+    "activities": [
+      {
+        "question": "What happens if there is no pregnancy during the menstrual cycle?",
+        "options": [
+          "Uterus becomes stronger",
+          "Body produces more eggs",
+          "Uterus lining sheds",
+          "Menstrual cycle stops"
+        ],
+        "answer": "Uterus lining sheds"
+      }
+    ]
+  },
+  {
+    "id": 4,
+    "title": "Premenstrual Syndrome (PMS)",
+    "image": "/static/img/pms.jpg",
+    "description": "Explore common symptoms experienced before or during menstruation.",
+    "lesson": "Premenstrual Syndrome (PMS) includes symptoms such as mood changes, breast pain, headache, back pain, acne, and food cravings, occurring before or during menstruation.",
+    "activities": [
+      {
+        "question": "Which of these is a PMS symptom?",
+        "options": [
+          "Fever",
+          "Mood changes",
+          "Sneezing",
+          "Hair loss"
+        ],
+        "answer": "Mood changes"
+      }
+    ]
+  },
+  {
+    "id": 5,
+    "title": "Tracking Your Menstrual Cycle",
+    "image": "/static/img/tracking.jpg",
+    "description": "Learn how and why to track your menstrual cycle.",
+    "lesson": "A regular menstrual cycle lasts between 21\u201335 days. Tracking helps you understand your body and prepare for your period. You can monitor mood, period heaviness, and pain level.",
+    "activities": [
+      {
+        "question": "How long is a regular menstrual cycle?",
+        "options": [
+          "7-14 days",
+          "21-35 days",
+          "40-60 days",
+          "5 days"
+        ],
+        "answer": "21-35 days"
+      }
+    ]
+  },
+  {
+    "id": 6,
+    "title": "Menstrual Hygiene",
+    "image": "/static/img/hygiene.jpg",
+    "description": "How to keep clean during menstruation and avoid infections.",
+    "lesson": "Wash the genital area with clean water and mild soap. Change pads or tampons regularly. Avoid strong chemicals or douches. Always wash hands before and after changing materials.",
+    "activities": [
+      {
+        "question": "What should you avoid when cleaning during menstruation?",
+        "options": [
+          "Using mild soap",
+          "Washing with clean water",
+          "Using strong chemicals",
+          "Changing pads regularly"
+        ],
+        "answer": "Using strong chemicals"
+      }
+    ]
+  },
+  {
+    "id": 7,
+    "title": "Proper Disposal",
+    "image": "/static/img/disposal.jpg",
+    "description": "How to properly dispose of menstrual hygiene materials.",
+    "lesson": "Wrap used pads or tampons in paper before throwing them in the trash. Do not flush pads or tampons down the toilet.",
+    "activities": [
+      {
+        "question": "What should you NOT do with used pads?",
+        "options": [
+          "Wrap and bin",
+          "Flush down toilet",
+          "Burn in safe incinerator",
+          "Use biodegradable disposal"
+        ],
+        "answer": "Flush down toilet"
+      }
+    ]
+  },
+  {
+    "id": 8,
+    "title": "Myths and Facts",
+    "image": "/static/img/myths.png",
+    "description": "Debunk common myths and replace them with facts.",
+    "lesson": "Myths such as 'You shouldn\u2019t shower on your period' or 'Periods are dirty' are false. Showering is safe, and menstruation is healthy and natural.",
+    "activities": [
+      {
+        "question": "Is it safe to shower while on your period?",
+        "options": [
+          "Yes",
+          "No"
+        ],
+        "answer": "Yes"
+      }
+    ]
+  },
+  {
+    "id": 9,
+    "title": "Gender and Support",
+    "image": "/static/img/support.png",
+    "description": "Learn about gender roles and how to support menstruating girls.",
+    "lesson": "Gender refers to roles shaped by society, while sex refers to biological differences. Support menstruating girls by not teasing, being respectful, and offering help.",
+    "activities": [
+      {
+        "question": "What is a good way to support menstruating girls?",
+        "options": [
+          "Avoid talking to them",
+          "Make fun of them",
+          "Be understanding and helpful",
+          "Ignore them"
+        ],
+        "answer": "Be understanding and helpful"
+      }
+    ]
+  },
+  {
+    "id": 10,
+    "title": "Nutrition and Health Tips",
+    "image": "/static/img/nutrition.png",
+    "description": "Discover proper nutrition and health habits during menstruation.",
+    "lesson": "Eat a balanced diet with fruits and vegetables. Avoid too much junk food or sugary snacks. Stay hydrated, get enough sleep, and eat three meals daily.",
+    "activities": [
+      {
+        "question": "Which food should you avoid too much during your period?",
+        "options": [
+          "Fruits",
+          "Vegetables",
+          "Junk food",
+          "Rice"
+        ],
+        "answer": "Junk food"
+      }
+    ]
+  }
+]

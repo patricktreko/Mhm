@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>PeriodiPal</title>
+    <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
+    <meta name="theme-color" content="#d72660">
+    <link rel="icon" href="/static/img/icon-192.png">
+    <link rel="apple-touch-icon" href="/static/img/icon-192.png">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <!-- ...other head content... -->
+</head>
+<body style="background: linear-gradient(135deg, #ffe0ec 0%, #f7f7fa 100%); min-height:100vh;">
+    <div class="mascot" style="justify-content:center; margin-top:2em;">
+        <img src="/static/img/icon-192.png" alt="Mascot" style="width:80px; height:80px; margin-right:1.5em;">
+        <span class="mascot-text" style="font-size:1.5em; color:#a61b46; font-weight:bold;">Hi! I'm Peri the Pal! Let's learn about growing up together 🎉</span>
+    </div>
+    <h1 style="text-align:center; font-size:2.2em; margin:1.2em 0 0.5em 0; color:#d72660;">Welcome to Menstrual Hygiene Learning</h1>
+
+    <div class="main-content-card" style="max-width:900px; margin:2em auto; background:#fff; border-radius:28px; box-shadow:0 6px 32px #ffd6e0; padding:2.5em 2em 2em 2em;">
+        <div class="roulette-section" style="display:flex; flex-direction:column; align-items:center; margin:2em 0 3em 0;">
+            <div id="rouletteWheel" style="display:flex; justify-content:center; align-items:center; gap:1.5em; margin-bottom:1em;">
+                <div class="roulette-item" data-idx="0" style="width:170px; height:90px; display:flex; align-items:center; justify-content:center; font-size:1.1em; border-radius:18px; background:#ffe0ec; border:3px solid #ffd6e0; color:#d72660; font-weight:bold; box-shadow:0 2px 8px #ffd6e0; transition:background 0.2s, border 0.2s, color 0.2s, transform 0.2s;">Matching Game</div>
+                <div class="roulette-item" data-idx="1" style="width:170px; height:90px; display:flex; align-items:center; justify-content:center; font-size:1.1em; border-radius:18px; background:#ffe0ec; border:3px solid #ffd6e0; color:#d72660; font-weight:bold; box-shadow:0 2px 8px #ffd6e0; transition:background 0.2s, border 0.2s, color 0.2s, transform 0.2s;">Period Tracker Puzzle</div>
+                <div class="roulette-item" data-idx="2" style="width:170px; height:90px; display:flex; align-items:center; justify-content:center; font-size:1.1em; border-radius:18px; background:#ffe0ec; border:3px solid #ffd6e0; color:#d72660; font-weight:bold; box-shadow:0 2px 8px #ffd6e0; transition:background 0.2s, border 0.2s, color 0.2s, transform 0.2s;">Quiz Challenge</div>
+                <div class="roulette-item" data-idx="3" style="width:170px; height:90px; display:flex; align-items:center; justify-content:center; font-size:1.1em; border-radius:18px; background:#ffe0ec; border:3px solid #ffd6e0; color:#d72660; font-weight:bold; box-shadow:0 2px 8px #ffd6e0; transition:background 0.2s, border 0.2s, color 0.2s, transform 0.2s;">Sorting Game</div>
+            </div>
+            <button id="spinBtn" class="spin-btn-animated">
+                <span style="font-size:2em; display:inline-block; vertical-align:middle;">🎡</span>
+                <span style="font-size:1.1em; font-weight:bold; margin-left:0.5em; vertical-align:middle;">Spin the Wheel!</span>
+            </button>
+            <style>
+            .spin-btn-animated {
+                background: linear-gradient(135deg, #d72660 60%, #ffd6e0 100%);
+                color: #fff;
+                border: none;
+                border-radius: 50px;
+                width: 220px;
+                height: 70px;
+                font-size: 1.2em;
+                box-shadow: 0 4px 16px #ffd6e0;
+                cursor: pointer;
+                margin-top: 1.5em;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 0.5em;
+                transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+            }
+            .spin-btn-animated:hover, .spin-btn-animated:focus {
+                background: linear-gradient(135deg, #ffd6e0 0%, #d72660 100%);
+                color: #d72660;
+                transform: scale(1.08) rotate(-3deg);
+                box-shadow: 0 8px 32px #ffd6e0;
+                outline: none;
+            }
+            .spin-btn-animated.spinning {
+                animation: spin-rotate 0.7s linear infinite;
+            }
+            @keyframes spin-rotate {
+                100% { transform: rotate(360deg); }
+            }
+            </style>
+        </div>
+
+        <!-- Modal for showing the result -->
+        <div id="gameModal" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.3); align-items:center; justify-content:center; z-index:2000;">
+            <div style="background:#fff; border-radius:18px; padding:2em 2.5em; box-shadow:0 4px 24px #ffd6e0; text-align:center; min-width:260px;">
+                <h2 id="gameTitle"></h2>
+                <p id="gameDesc"></p>
+                <a id="playGameBtn" href="#" style="display:inline-block; margin:1.5em 0 0 0; background:#d72660; color:#fff; border-radius:10px; padding:0.7em 2em; font-size:1.1em; text-decoration:none; font-weight:bold;">Play</a><br>
+                <button onclick="closeModal()" style="margin-top:1em; background:#ffd6e0; color:#d72660; border:none; border-radius:8px; padding:0.5em 1.5em; font-weight:bold; cursor:pointer;">Close</button>
+            </div>
+        </div>
+
+        <div class="lesson-list" style="margin-top:2.5em; gap:2.5em;">
+            {% for lesson in lessons %}
+                <div class="lesson-card">
+                    <img src="{{ lesson.image }}" alt="{{ lesson.title }}" class="lesson-list-image">
+                    <h2>{{ lesson.title }}</h2>
+                    <p>{{ lesson.description }}</p>
+                    <a href="/lesson/{{ lesson.id }}">Start Lesson</a>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='js/spinwheel.js') }}"></script>
+    <script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function() {
+    navigator.serviceWorker.register('/static/js/sw.js')
+      .then(reg => {
+        // Registration successful
+      })
+      .catch(err => {
+        // Registration failed
+      });
+  });
+}
+</script>
+</body>
+</html>

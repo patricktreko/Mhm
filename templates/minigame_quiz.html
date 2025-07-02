@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Quiz Challenge</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        .quiz-container {
+            max-width: 500px;
+            margin: 2em auto;
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 2px 12px #ffd6e0;
+            padding: 2em;
+        }
+        #howToPlay {
+            background: #fff8fb;
+            border: 2px solid #ffd6e0;
+            border-radius: 14px;
+            padding: 1em 1.5em;
+            margin-bottom: 1.5em;
+            font-size: 1.1em;
+            color: #a61b46;
+        }
+        .quiz-question {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 1em;
+        }
+        .quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: 1em;
+        }
+        .quiz-option {
+            background: #ffe0ec;
+            border: 2px solid #d72660;
+            border-radius: 10px;
+            padding: 0.7em 1.2em;
+            cursor: pointer;
+            font-size: 1.1em;
+            transition: background 0.2s, border 0.2s;
+        }
+        .quiz-option.correct {
+            background: #a2e6a2 !important;
+            border-color: #3bb143 !important;
+            color: #222 !important;
+        }
+        .quiz-option.wrong {
+            background: #ffd6e0 !important;
+            border-color: #d72660 !important;
+            color: #d72660 !important;
+        }
+        #quiz-feedback {
+            text-align: center;
+            margin-top: 1.5em;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="quiz-container">
+        <h1>Quiz Challenge</h1>
+        <div id="howToPlay">
+            <strong>How to Play:</strong><br>
+            Read each question and tap the answer you think is correct. Try to get them all right!
+        </div>
+        <div id="quiz-content"></div>
+        <div id="quiz-feedback"></div>
+        <a href="/" style="display:block; margin-top:2em;">Back to Home</a>
+    </div>
+    <script>
+        // Example quiz questions
+        const questions = [
+            {
+                question: "What is menstruation?",
+                options: [
+                    "A monthly process where the uterus sheds its lining",
+                    "A type of exercise",
+                    "A food",
+                    "A disease"
+                ],
+                answer: "A monthly process where the uterus sheds its lining"
+            },
+            {
+                question: "Which item is used for menstrual hygiene?",
+                options: [
+                    "Sanitary Pad",
+                    "Notebook",
+                    "Candy",
+                    "Pencil"
+                ],
+                answer: "Sanitary Pad"
+            },
+            {
+                question: "How long is a regular menstrual cycle?",
+                options: [
+                    "7-14 days",
+                    "21-35 days",
+                    "40-60 days",
+                    "5 days"
+                ],
+                answer: "21-35 days"
+            },
+            {
+                question: "Is it safe to shower while on your period?",
+                options: [
+                    "Yes",
+                    "No"
+                ],
+                answer: "Yes"
+            },
+            {
+                question: "At what age do most girls start puberty?",
+                options: [
+                    "5-7",
+                    "8-14",
+                    "15-18",
+                    "20-22"
+                ],
+                answer: "8-14"
+            },
+            {
+                question: "Which of these is NOT part of the female reproductive system?",
+                options: [
+                    "Ovaries",
+                    "Penis",
+                    "Uterus",
+                    "Vagina"
+                ],
+                answer: "Penis"
+            },
+            {
+                question: "What should you do to keep your reproductive system healthy?",
+                options: [
+                    "Eat healthy foods",
+                    "Never ask questions",
+                    "Never exercise",
+                    "Ignore hygiene"
+                ],
+                answer: "Eat healthy foods"
+            },
+            {
+                question: "What is PMS?",
+                options: [
+                    "A group of symptoms before or during menstruation",
+                    "A type of food",
+                    "A school subject",
+                    "A holiday"
+                ],
+                answer: "A group of symptoms before or during menstruation"
+            },
+            {
+                question: "How often should you change your pad or tampon?",
+                options: [
+                    "Every 4-6 hours",
+                    "Once a week",
+                    "Once a month",
+                    "Never"
+                ],
+                answer: "Every 4-6 hours"
+            },
+            {
+                question: "What should you NOT do with used pads?",
+                options: [
+                    "Wrap and bin",
+                    "Flush down toilet",
+                    "Burn in safe incinerator",
+                    "Use biodegradable disposal"
+                ],
+                answer: "Flush down toilet"
+            },
+            {
+                question: "Which of these is a menstrual myth?",
+                options: [
+                    "You shouldn't shower during your period",
+                    "Periods are normal",
+                    "You can play sports on your period",
+                    "Menstruation is healthy"
+                ],
+                answer: "You shouldn't shower during your period"
+            },
+            {
+                question: "How can you support someone on their period?",
+                options: [
+                    "Be kind and helpful",
+                    "Tease them",
+                    "Ignore them",
+                    "Make fun of them"
+                ],
+                answer: "Be kind and helpful"
+            },
+            {
+                question: "Which food should you avoid too much during your period?",
+                options: [
+                    "Fruits",
+                    "Vegetables",
+                    "Junk food",
+                    "Rice"
+                ],
+                answer: "Junk food"
+            }
+        ];
+
+        // Shuffle array utility
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        // Shuffle questions and their options
+        const shuffledQuestions = shuffle(questions.map(q => {
+            return {
+                ...q,
+                options: shuffle([...q.options])
+            };
+        }));
+
+        let current = 0;
+        let score = 0;
+
+        function showQuestion() {
+            const q = shuffledQuestions[current];
+            const quizContent = document.getElementById('quiz-content');
+            quizContent.innerHTML = `
+                <div class="quiz-question">${q.question}</div>
+                <div class="quiz-options">
+                    ${q.options.map(opt => `<div class="quiz-option">${opt}</div>`).join('')}
+                </div>
+            `;
+            document.getElementById('quiz-feedback').textContent = "";
+            document.querySelectorAll('.quiz-option').forEach(optEl => {
+                optEl.onclick = function() {
+                    if (optEl.textContent === q.answer) {
+                        optEl.classList.add('correct');
+                        document.getElementById('quiz-feedback').textContent = "✅ Correct!";
+                        score++;
+                    } else {
+                        optEl.classList.add('wrong');
+                        document.getElementById('quiz-feedback').textContent = "❌ Try again!";
+                    }
+                    // Disable all options
+                    document.querySelectorAll('.quiz-option').forEach(el => el.onclick = null);
+                    setTimeout(() => {
+                        current++;
+                        if (current < shuffledQuestions.length) {
+                            showQuestion();
+                        } else {
+                            showResult();
+                        }
+                    }, 1000);
+                };
+            });
+        }
+
+        function showResult() {
+            const quizContent = document.getElementById('quiz-content');
+            quizContent.innerHTML = `<div class="quiz-question">You scored ${score} out of ${shuffledQuestions.length}! 🎉</div>`;
+            document.getElementById('quiz-feedback').textContent = "";
+        }
+
+        showQuestion();
+    </script>
+</body>
+</html>

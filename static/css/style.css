@@ -1,0 +1,388 @@
+/* General Styles */
+body {
+    font-family: 'Comic Sans MS', 'Segoe UI', Arial, sans-serif;
+    background: linear-gradient(135deg, #ffe0ec 0%, #f7f7fa 100%);
+    color: #222;
+    margin: 0;
+    padding: 0;
+    scroll-behavior: smooth;
+    min-height: 100vh;
+}
+
+h1, h2, h3 {
+    color: #d72660;
+    margin-top: 0.5em;
+    font-family: 'Comic Sans MS', 'Segoe UI', Arial, sans-serif;
+}
+
+a {
+    color: #1e90ff;
+    text-decoration: none;
+    transition: color 0.2s;
+    font-weight: bold;
+}
+a:hover {
+    color: #d72660;
+}
+
+/* Welcome Mascot */
+.mascot {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 2em;
+    margin-bottom: 1em;
+}
+.mascot img {
+    width: 80px;
+    height: 80px;
+    margin-right: 1.5em;
+}
+.mascot-text {
+    font-size: 1.5em;
+    color: #a61b46;
+    font-weight: bold;
+}
+
+/* Main Content Card */
+.main-content-card {
+    max-width: 900px;
+    margin: 2em auto;
+    background: #fff;
+    border-radius: 28px;
+    box-shadow: 0 6px 32px #ffd6e0;
+    padding: 2.5em 2em 2em 2em;
+}
+
+/* Roulette Section */
+.roulette-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 2em 0 3em 0;
+}
+#rouletteWheel {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1.5em;
+    margin-bottom: 1em;
+}
+.roulette-item {
+    width: 170px;
+    height: 90px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1em;
+    border-radius: 18px;
+    background: #ffe0ec;
+    border: 3px solid #ffd6e0;
+    color: #d72660;
+    font-weight: bold;
+    box-shadow: 0 2px 8px #ffd6e0;
+    transition: background 0.2s, border 0.2s, color 0.2s, transform 0.2s;
+}
+.roulette-item:focus, .roulette-item:hover {
+    outline: 3px solid #d72660;
+    background: #ffd6e0;
+}
+
+.spin-btn-animated {
+    background: linear-gradient(135deg, #d72660 60%, #ffd6e0 100%);
+    color: #fff;
+    border: none;
+    border-radius: 50px;
+    width: 220px;
+    height: 70px;
+    font-size: 1.2em;
+    box-shadow: 0 4px 16px #ffd6e0;
+    cursor: pointer;
+    margin-top: 1.5em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5em;
+    transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+}
+.spin-btn-animated:hover, .spin-btn-animated:focus {
+    background: linear-gradient(135deg, #ffd6e0 0%, #d72660 100%);
+    color: #d72660;
+    transform: scale(1.08) rotate(-3deg);
+    box-shadow: 0 8px 32px #ffd6e0;
+    outline: none;
+}
+.spin-btn-animated.spinning {
+    animation: spin-rotate 0.7s linear infinite;
+}
+@keyframes spin-rotate {
+    100% { transform: rotate(360deg); }
+}
+
+/* Lesson List */
+.lesson-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2.5em;
+    justify-content: center;
+    margin: 2rem 0;
+}
+
+.lesson-card {
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: 0 4px 16px rgba(215,38,96,0.10);
+    padding: 2rem 1.5rem 1.5rem 1.5rem;
+    width: 280px;
+    text-align: center;
+    transition: box-shadow 0.2s, transform 0.2s, border 0.2s;
+    border: 3px solid #ffd6e0;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.lesson-card:hover, .lesson-card:focus-within {
+    box-shadow: 0 8px 24px rgba(215,38,96,0.18);
+    transform: scale(1.03);
+    border-color: #d72660;
+    outline: none;
+}
+.lesson-card img {
+    width: 100px;
+    height: 100px;
+    object-fit: contain;
+    margin-bottom: 1rem;
+    border-radius: 50%;
+    background: #ffe0ec;
+    border: 2px solid #ffd6e0;
+}
+
+.lesson-card h2 {
+    font-size: 1.3em;
+    margin: 0.5em 0 0.2em 0;
+}
+
+.lesson-card p {
+    font-size: 1em;
+    color: #555;
+}
+
+.lesson-card a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 1em;
+    background: #d72660;
+    color: #fff;
+    border-radius: 12px;
+    padding: 0.7em 1.5em;
+    font-size: 1.1em;
+    box-shadow: 0 2px 8px rgba(215,38,96,0.10);
+    transition: background 0.2s, color 0.2s, transform 0.2s;
+    font-weight: bold;
+    text-decoration: none;
+    min-height: 48px;
+    min-width: 120px;
+    text-align: center;
+}
+.lesson-card a:hover, .lesson-card a:focus {
+    background: #a61b46;
+    color: #fff;
+    transform: scale(1.07);
+    outline: none;
+}
+
+/* Lesson Page */
+#activities {
+    margin-top: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.activity-card {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 2px 8px rgba(215,38,96,0.10);
+    padding: 1.2rem;
+    border: 2px solid #ffd6e0;
+    min-width: 220px;
+    max-width: 100%;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.activity-card h3 {
+    font-size: 1.1em;
+    color: #d72660;
+}
+
+.activity-card button {
+    background: #d72660;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    padding: 0.7em 1.5em;
+    margin: 0.3em;
+    font-size: 1.1em;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+    font-family: inherit;
+}
+.activity-card button:hover {
+    background: #a61b46;
+    transform: scale(1.07);
+}
+
+/* Feedback */
+#feedback {
+    font-size: 1.2em;
+    margin-top: 1em;
+    font-weight: bold;
+}
+
+/* Mini-game */
+#gameCanvas {
+    border-radius: 20px;
+    border: 3px solid #ffd6e0;
+    background: #fff8fb;
+}
+
+/* Homepage lesson card images */
+.lesson-list-image {
+    width: 100px;
+    height: 100px;
+    object-fit: contain;
+    margin-bottom: 1rem;
+    border-radius: 50%;
+    background: #ffe0ec;
+    border: 2px solid #ffd6e0;
+}
+
+/* Lesson page main image */
+.lesson-main-image {
+    display: block;
+    margin: 1em auto 1em auto;
+    max-width: 220px;
+    width: 90%;
+    height: auto;
+    border-radius: 18px;
+    box-shadow: 0 2px 12px rgba(215,38,96,0.10);
+    background: #ffe0ec;
+    border: 2px solid #ffd6e0;
+}
+
+/* Floating Back Button */
+.back-btn {
+    position: fixed;
+    top: 18px;
+    left: 18px;
+    z-index: 1000;
+    background: #fff;
+    color: #d72660;
+    border: 2px solid #d72660;
+    border-radius: 50%;
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2em;
+    box-shadow: 0 2px 8px rgba(215,38,96,0.10);
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s, border 0.2s, box-shadow 0.2s, transform 0.2s;
+}
+.back-btn:hover, .back-btn:focus {
+    background: #d72660;
+    color: #fff;
+    border-color: #a61b46;
+    box-shadow: 0 4px 16px rgba(215,38,96,0.18);
+    transform: scale(1.08);
+    outline: none;
+}
+
+/* Smoother transitions for cards and buttons */
+.lesson-card, .activity-card, button, .lesson-card a {
+    transition: box-shadow 0.2s, transform 0.2s, background 0.2s, color 0.2s, border 0.2s;
+}
+
+/* Lesson Container */
+.lesson-container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 2em 1em 1em 3.5em; /* extra left padding for back button */
+    position: relative;
+}
+
+.lesson-header h1 {
+    margin-top: 0.5em;
+    margin-left: 0.5em;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+    .main-content-card {
+        padding: 1.2em 0.5em 1.5em 0.5em;
+    }
+    .lesson-list {
+        gap: 1.2em;
+    }
+    .lesson-card {
+        width: 95%;
+        min-width: 220px;
+    }
+    #rouletteWheel {
+        flex-direction: column;
+        gap: 1em;
+    }
+    .roulette-item {
+        width: 90vw;
+        max-width: 320px;
+        height: 70px;
+        font-size: 1em;
+    }
+}
+
+@media (max-width: 600px) {
+    .mascot img {
+        width: 48px;
+        height: 48px;
+        margin-right: 0.7em;
+    }
+    .mascot-text {
+        font-size: 1.1em;
+    }
+    .main-content-card {
+        padding: 0.5em 0.2em 1em 0.2em;
+        border-radius: 16px;
+    }
+    .lesson-card {
+        padding: 1em 0.5em 1em 0.5em;
+    }
+    .roulette-item {
+        height: 56px;
+        font-size: 0.95em;
+    }
+    .spin-btn-animated {
+        width: 98vw;
+        max-width: 220px;
+        height: 54px;
+        font-size: 1em;
+    }
+}
+
+/* Touch-friendly buttons and cards */
+button, .lesson-card a, .activity-card button {
+    min-width: 48px;
+    min-height: 48px;
+    font-size: 1.1em;
+    border-radius: 14px;
+}
+
+/* Focus state for remote/keyboard navigation (Android TV) */
+button:focus, .lesson-card a:focus, .activity-card button:focus {
+    outline: 3px solid #d72660;
+    outline-offset: 2px;
+    background: #ffd6e0;
+}

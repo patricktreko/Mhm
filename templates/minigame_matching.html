@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Matching Game</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        .matching-container {
+            max-width: 600px;
+            margin: 2em auto;
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 2px 12px #ffd6e0;
+            padding: 2em;
+        }
+        .matching-list {
+            display: flex;
+            justify-content: space-between;
+            gap: 2em;
+        }
+        .terms, .defs {
+            width: 45%;
+        }
+        .term, .def {
+            background: #ffe0ec;
+            border: 2px solid #d72660;
+            border-radius: 12px;
+            padding: 0.7em 1em;
+            margin: 0.5em 0;
+            cursor: pointer;
+            font-size: 1.1em;
+            transition: background 0.2s, border 0.2s;
+        }
+        .term.selected, .def.selected {
+            background: #d72660;
+            color: #fff;
+            border: 2px solid #a61b46;
+        }
+        .match-correct {
+            background: #a2e6a2 !important;
+            border-color: #3bb143 !important;
+            color: #222 !important;
+        }
+        .match-wrong {
+            background: #ffd6e0 !important;
+            border-color: #d72660 !important;
+            color: #d72660 !important;
+        }
+        #howToPlay {
+            background: #fff8fb;
+            border: 2px solid #ffd6e0;
+            border-radius: 14px;
+            padding: 1em 1.5em;
+            margin-bottom: 1.5em;
+            font-size: 1.1em;
+            color: #a61b46;
+        }
+    </style>
+</head>
+<body>
+    <div class="matching-container">
+        <h1>Matching Game</h1>
+        <div id="howToPlay">
+            <strong>How to Play:</strong> <br>
+            Tap a <b>term</b> on the left, then tap the <b>definition</b> you think matches it on the right. Try to match all pairs correctly!
+        </div>
+        <div class="matching-list">
+            <div class="terms" id="terms"></div>
+            <div class="defs" id="defs"></div>
+        </div>
+        <div id="match-feedback" style="text-align:center; margin-top:1.5em; font-size:1.2em; font-weight:bold;"></div>
+        <a href="/" style="display:block; margin-top:2em;">Back to Home</a>
+    </div>
+    <script>
+        // Example terms and definitions
+        const pairs = [
+            { term: "Puberty", def: "The stage when a child's body matures into an adult body." },
+            { term: "Menstruation", def: "Monthly shedding of the uterine lining." },
+            { term: "Ovary", def: "Organ that produces eggs in females." },
+            { term: "Hygiene", def: "Practices to keep clean and healthy." }
+        ];
+
+        // Shuffle function
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        // Prepare shuffled lists
+        const terms = pairs.map(p => p.term);
+        const defs = pairs.map(p => p.def);
+        shuffle(defs);
+
+        // Render terms and definitions
+        const termsDiv = document.getElementById('terms');
+        const defsDiv = document.getElementById('defs');
+        terms.forEach((t, i) => {
+            const el = document.createElement('div');
+            el.className = 'term';
+            el.textContent = t;
+            el.dataset.idx = i;
+            termsDiv.appendChild(el);
+        });
+        defs.forEach((d, i) => {
+            const el = document.createElement('div');
+            el.className = 'def';
+            el.textContent = d;
+            el.dataset.idx = i;
+            defsDiv.appendChild(el);
+        });
+
+        let selectedTerm = null;
+        let selectedDef = null;
+        let matched = 0;
+
+        function clearSelections() {
+            document.querySelectorAll('.term').forEach(el => el.classList.remove('selected'));
+            document.querySelectorAll('.def').forEach(el => el.classList.remove('selected'));
+        }
+
+        function checkMatch(termIdx, defIdx) {
+            const term = terms[termIdx];
+            const def = defs[defIdx];
+            const pair = pairs.find(p => p.term === term && p.def === def);
+            return !!pair;
+        }
+
+        document.querySelectorAll('.term').forEach(termEl => {
+            termEl.onclick = function() {
+                clearSelections();
+                termEl.classList.add('selected');
+                selectedTerm = parseInt(termEl.dataset.idx);
+            };
+        });
+
+        document.querySelectorAll('.def').forEach(defEl => {
+            defEl.onclick = function() {
+                if (selectedTerm === null) return;
+                defEl.classList.add('selected');
+                selectedDef = parseInt(defEl.dataset.idx);
+
+                // Check match
+                if (checkMatch(selectedTerm, selectedDef)) {
+                    document.querySelectorAll('.term')[selectedTerm].classList.add('match-correct');
+                    defEl.classList.add('match-correct');
+                    document.getElementById('match-feedback').textContent = "Great! That's a correct match!";
+                    matched++;
+                    // Disable matched
+                    document.querySelectorAll('.term')[selectedTerm].onclick = null;
+                    defEl.onclick = null;
+                } else {
+                    document.querySelectorAll('.term')[selectedTerm].classList.add('match-wrong');
+                    defEl.classList.add('match-wrong');
+                    document.getElementById('match-feedback').textContent = "Oops! Try again.";
+                    setTimeout(() => {
+                        document.querySelectorAll('.term')[selectedTerm].classList.remove('match-wrong', 'selected');
+                        defEl.classList.remove('match-wrong', 'selected');
+                        document.getElementById('match-feedback').textContent = "";
+                    }, 1000);
+                }
+                selectedTerm = null;
+                selectedDef = null;
+                clearSelections();
+                // Check if all matched
+                if (matched === pairs.length) {
+                    document.getElementById('match-feedback').textContent = "🎉 You matched all terms! Well done!";
+                }
+            };
+        });
+    </script>
+</body>
+</html>

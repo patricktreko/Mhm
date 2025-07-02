@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sorting Game</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        .sorting-container {
+            max-width: 700px;
+            margin: 2em auto;
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 2px 12px #ffd6e0;
+            padding: 2em;
+        }
+        #howToPlay {
+            background: #fff8fb;
+            border: 2px solid #ffd6e0;
+            border-radius: 14px;
+            padding: 1em 1.5em;
+            margin-bottom: 1.5em;
+            font-size: 1.1em;
+            color: #a61b46;
+        }
+        .categories {
+            display: flex;
+            justify-content: space-between;
+            gap: 2em;
+            margin-bottom: 2em;
+        }
+        .category {
+            flex: 1;
+            min-height: 120px;
+            background: #ffe0ec;
+            border: 2px dashed #d72660;
+            border-radius: 14px;
+            padding: 1em;
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+        .item-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1em;
+            justify-content: center;
+            margin-bottom: 1.5em;
+        }
+        .item {
+            background: #fff8fb;
+            border: 2px solid #d72660;
+            border-radius: 10px;
+            padding: 0.7em 1.2em;
+            cursor: grab;
+            font-size: 1.1em;
+            margin: 0.2em;
+            transition: background 0.2s, border 0.2s;
+        }
+        .item.dragging {
+            opacity: 0.5;
+        }
+        .category.over {
+            background: #d72660;
+            color: #fff;
+            border-color: #a61b46;
+        }
+        #sort-feedback {
+            text-align: center;
+            margin-top: 1.5em;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="sorting-container">
+        <h1>Sorting Game</h1>
+        <div id="howToPlay">
+            <strong>How to Play:</strong><br>
+            Drag each item below into the correct category box. Try to sort all items correctly!
+        </div>
+        <div class="item-list" id="itemList"></div>
+        <div class="categories">
+            <div class="category" id="cat-hygiene" data-cat="Hygiene">Hygiene Items</div>
+            <div class="category" id="cat-not-hygiene" data-cat="Not Hygiene">Not Hygiene</div>
+        </div>
+        <div id="sort-feedback"></div>
+        <a href="/" style="display:block; margin-top:2em;">Back to Home</a>
+    </div>
+    <script>
+        // Items and their correct categories
+        const items = [
+            { text: "Sanitary Pad", cat: "Hygiene" },
+            { text: "Soap", cat: "Hygiene" },
+            { text: "Toothbrush", cat: "Not Hygiene" },
+            { text: "Tampon", cat: "Hygiene" },
+            { text: "Candy", cat: "Not Hygiene" },
+            { text: "Menstrual Cup", cat: "Hygiene" },
+            { text: "Notebook", cat: "Not Hygiene" }
+        ];
+
+        // Shuffle items
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+        shuffle(items);
+
+        // Render items
+        const itemList = document.getElementById('itemList');
+        items.forEach((item, idx) => {
+            const el = document.createElement('div');
+            el.className = 'item';
+            el.textContent = item.text;
+            el.draggable = true;
+            el.dataset.idx = idx;
+            itemList.appendChild(el);
+        });
+
+        // Drag and drop logic
+        let draggedItem = null;
+
+        document.querySelectorAll('.item').forEach(itemEl => {
+            itemEl.addEventListener('dragstart', function(e) {
+                draggedItem = itemEl;
+                itemEl.classList.add('dragging');
+            });
+            itemEl.addEventListener('dragend', function(e) {
+                draggedItem = null;
+                itemEl.classList.remove('dragging');
+            });
+        });
+
+        document.querySelectorAll('.category').forEach(catEl => {
+            catEl.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                catEl.classList.add('over');
+            });
+            catEl.addEventListener('dragleave', function(e) {
+                catEl.classList.remove('over');
+            });
+            catEl.addEventListener('drop', function(e) {
+                catEl.classList.remove('over');
+                if (draggedItem) {
+                    // Check if correct
+                    const idx = parseInt(draggedItem.dataset.idx);
+                    if (catEl.dataset.cat === items[idx].cat) {
+                        catEl.appendChild(draggedItem);
+                        draggedItem.style.background = "#a2e6a2";
+                        draggedItem.style.borderColor = "#3bb143";
+                        draggedItem.draggable = false;
+                        draggedItem.style.cursor = "default";
+                        showFeedback("Correct!", true);
+                    } else {
+                        draggedItem.style.background = "#ffd6e0";
+                        draggedItem.style.borderColor = "#d72660";
+                        showFeedback("Oops! Try again.", false);
+                    }
+                    checkAllSorted();
+                }
+            });
+        });
+
+        function showFeedback(msg, correct) {
+            const fb = document.getElementById('sort-feedback');
+            fb.textContent = msg;
+            fb.style.color = correct ? "#3bb143" : "#d72660";
+            setTimeout(() => { fb.textContent = ""; }, 1200);
+        }
+
+        function checkAllSorted() {
+            const total = items.length;
+            const sorted = document.querySelectorAll('.item[draggable="false"]').length;
+            if (sorted === total) {
+                document.getElementById('sort-feedback').textContent = "🎉 All sorted! Great job!";
+            }
+        }
+    </script>
+</body>
+</html>

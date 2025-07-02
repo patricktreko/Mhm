@@ -1,3 +1,3 @@
 Flask
 gunicorn
-pip install pyyaml
+pyyaml
